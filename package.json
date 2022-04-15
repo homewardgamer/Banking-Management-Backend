@@ -1,0 +1,19 @@
+{
+  "name": "banking-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/homewardgamer/Banking-Management-Backend.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/homewardgamer/Banking-Management-Backend/issues"
+  },
+  "homepage": "https://github.com/homewardgamer/Banking-Management-Backend#readme"
+}
