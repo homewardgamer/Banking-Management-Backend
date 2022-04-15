@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/homewardgamer/Banking-Management-Backend/issues"
   },
-  "homepage": "https://github.com/homewardgamer/Banking-Management-Backend#readme"
+  "homepage": "https://github.com/homewardgamer/Banking-Management-Backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3"
+  }
 }
