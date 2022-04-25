@@ -5,12 +5,14 @@ from base.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
-        if attrs["is_employee"] and attrs["is_customer"]:
+        if attrs.get("is_employee", False) and attrs.get("is_customer", False):
             raise serializers.ValidationError(
-                {"message": "choose only one role"}, code=400)
-        if not attrs["is_employee"] and not attrs["is_customer"]:
+                {"message": "choose only one role"}, code=400
+            )
+        if not attrs.get("is_employee", False) and not attrs.get("is_customer", False):
             raise serializers.ValidationError(
-                {"message": "choose only one role"}, code=400)
+                {"message": "choose only one role"}, code=400
+            )
         return super().validate(attrs)
 
     class Meta:
