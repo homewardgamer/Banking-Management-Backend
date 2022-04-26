@@ -19,6 +19,13 @@ def user_register_view(request):
     return Response(data=data, status=HTTP_201_CREATED)
 
 
+@api_view(["DELETE"])
+@permission_classes([AllowAny])
+def user_delete_view(request, user_id):
+    User.objects.get(pk=user_id).delete()
+    return Response(data={"message": "Deleted User succesfully"}, status=HTTP_200_OK)
+
+
 def is_unauthorized(user, data):
     deposit = Transaction.TransactionTypes.DEPOSIT
     withdraw = Transaction.TransactionTypes.WITHDRAW
