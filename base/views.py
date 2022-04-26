@@ -1,10 +1,10 @@
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
 from rest_framework.status import *
 
+from base.permissions import *
 from base.serializers import *
 
 
@@ -20,7 +20,7 @@ def user_register_view(request):
 
 
 @api_view(["DELETE"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated, IsEmployee])
 def user_delete_view(request, user_id):
     User.objects.get(pk=user_id).delete()
     return Response(data={"message": "Deleted User succesfully"}, status=HTTP_200_OK)
@@ -48,7 +48,7 @@ def transaction_add_view(request):
 
 
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated, IsEmployee])
 def account_add_view(request):
     serializer = AccountSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
