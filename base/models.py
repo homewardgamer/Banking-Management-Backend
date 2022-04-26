@@ -16,7 +16,7 @@ class User(AbstractUser):
     is_customer = models.BooleanField(_("is_customer"), default=False)
     is_employee = models.BooleanField(_("is_employee"), default=False)
     updated_at = models.DateTimeField(auto_now=True)
-    branch_id = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True)
 
 
 class Account(models.Model):
