@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from base.models import User
+from base.models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,3 +29,9 @@ class UserSerializer(serializers.ModelSerializer):
             "is_customer",
             "is_employee",
         ]
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = "__all__"
