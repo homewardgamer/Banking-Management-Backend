@@ -33,6 +33,11 @@ class Account(models.Model):
 
 
 class Transaction(models.Model):
+    class TransactionTypes(models.TextChoices):
+        DEPOSIT = "DEPOSIT", "Deposit"
+        WITHDRAW = "WITHDRAW", "Withdraw"
+        TRANSFER = "TRANSFER", "Transfer"
+
     transaction_id = models.BigAutoField(primary_key=True)
     r_account = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True, related_name="r_transactions"
@@ -40,6 +45,6 @@ class Transaction(models.Model):
     s_account = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True, related_name="s_transactions"
     )
-    type = models.CharField(max_length=300)
+    type = models.CharField(max_length=300, choices=TransactionTypes.choices)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
     timestamp = models.DateTimeField(auto_now_add=True)
