@@ -32,7 +32,7 @@ class Account(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Transactions(models.Model):
+class Transaction(models.Model):
     transaction_id = models.BigAutoField(primary_key=True)
     r_account = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True, related_name="r_transactions"
