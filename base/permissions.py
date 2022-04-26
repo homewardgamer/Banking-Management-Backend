@@ -1,15 +1,15 @@
 from rest_framework import permissions
 
 
-class CustomerPermission(permissions.BasePermission):
+class IsCustomer(permissions.BasePermission):
     def has_permission(self, request, view):
-        if not request.data.get("is_customer"):
-            return False
-        return True
+        if request.user.is_customer:
+            return True
+        return False
 
 
-class EmployeePermission(permissions.BasePermission):
+class IsEmployee(permissions.BasePermission):
     def has_permission(self, request, view):
-        if not request.data.get("is_employee"):
-            return False
-        return True
+        if request.user.is_employee:
+            return True
+        return False
