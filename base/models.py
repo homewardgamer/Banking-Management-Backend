@@ -19,9 +19,15 @@ class User(AbstractUser):
 
 
 class Account(models.Model):
+    class AccountTypes(models.TextChoices):
+        SAVING = "SAVING", "Saving"
+        CURRENT = "CURRENT", "Current"
+
     account_id = models.BigAutoField(primary_key=True)
     account_holder = models.ForeignKey(User, on_delete=models.CASCADE)
-    account_type = models.CharField(max_length=300, default="savings")
+    account_type = models.CharField(
+        max_length=300, default=AccountTypes.SAVING, choices=AccountTypes.choices
+    )
     balance = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
