@@ -38,3 +38,12 @@ def transaction_add_view(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data, status=HTTP_201_CREATED)
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def account_add_view(request):
+    serializer = AccountSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(data=serializer.data, status=HTTP_201_CREATED)

@@ -1,3 +1,4 @@
+from django.db.models import fields
 from rest_framework import serializers
 
 from base.models import *
@@ -34,4 +35,10 @@ class UserSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
+        fields = "__all__"
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
         fields = "__all__"
