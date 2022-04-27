@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from base.forms import NewUserCreationForm
-from base.models import User
+from base.models import *
 
 
 class NewUserAdmin(UserAdmin):
@@ -15,3 +15,6 @@ class NewUserAdmin(UserAdmin):
 
 
 admin.site.register(User, NewUserAdmin)
+admin.site.register(Branch)
+admin.site.register(Account)
+admin.site.register(Transaction)
