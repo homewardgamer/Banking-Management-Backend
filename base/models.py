@@ -35,6 +35,7 @@ class Account(models.Model):
         max_length=300, default=AccountTypes.SAVING, choices=AccountTypes.choices
     )
     balance = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
+    disabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
