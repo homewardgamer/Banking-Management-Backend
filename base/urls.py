@@ -12,6 +12,7 @@ urlpatterns = [
     path("account/view/all", account_list_all),
     path("account/view/<account_id>", account_detail_by_id),
     path("account/disable/<account_id>", disable_account),
+    path("account/enable/<account_id>", enable_account),
     path("user/login", obtain_auth_token),
     path("user/logout", user_logout_view),
 ]
