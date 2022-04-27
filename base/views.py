@@ -6,6 +6,7 @@ from rest_framework.status import *
 
 from base.permissions import *
 from base.serializers import *
+from django.contrib.auth import logout
 
 
 @api_view(["POST"])
@@ -17,6 +18,15 @@ def user_register_view(request):
     data = dict(serializer.data)
     data["token"] = Token.objects.get(user=data["id"]).key
     return Response(data=data, status=HTTP_201_CREATED)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
+def user_logout_view(request):
+    request.user.auth_token.delete()
+    logout(request)
+    return Response(data={"Logout Succesful"}, status=HTTP_200_OK)
 
 
 @api_view(["DELETE"])
@@ -36,6 +46,7 @@ def is_unauthorized(user, data):
 
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def transaction_add_view(request):
     if is_unauthorized(request.user, request.data):
         return Response(
