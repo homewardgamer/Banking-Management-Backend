@@ -10,7 +10,7 @@ class NewUserAdmin(UserAdmin):
     add_form = NewUserCreationForm
     fieldsets = (
         *UserAdmin.fieldsets,
-        ("Additional", {"fields": ("address", "dob")}),
+        ("Additional", {"fields": ("address", "dob", "is_customer", "is_employee")}),
     )
 
 
