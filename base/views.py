@@ -87,10 +87,12 @@ def account_list_all(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated, IsEmployee])
+@permission_classes([IsAuthenticated, IsCustomer])
 def account_detail_by_id(request, account_id):
     try:
         account = Account.objects.get(account_id=account_id)
     except Account.DoesNotExist:
         return Response({"error": "invalid account_id"}, HTTP_400_BAD_REQUEST)
+    if request.user != account.account_holder:
+        return Response({"error": "permission denied"}, HTTP_401_UNAUTHORIZED)
     return Response(AccountSerializer(account).data, HTTP_200_OK)
