@@ -8,6 +8,9 @@ class Branch(models.Model):
     branch_address = models.CharField(max_length=500)
     branch_code = models.IntegerField(unique=True)
 
+    class Meta:
+        verbose_name_plural = "branches"
+
 
 class User(AbstractUser):
     address = models.CharField(max_length=300, blank=True)
