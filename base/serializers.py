@@ -42,6 +42,25 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = "__all__"
 
+    def validate(self, attrs):
+        deposit = Transaction.TransactionTypes.DEPOSIT
+        withdraw = Transaction.TransactionTypes.WITHDRAW
+        transfer = Transaction.TransactionTypes.TRANSFER
+        combination = (
+            attrs["type"],
+            attrs.get("r_account", None),
+            attrs.get("s_account", None),
+        )
+        if combination[0] == deposit and combination[1] and not combination[2]:
+            return super().validate(attrs)
+        if combination[0] == withdraw and not combination[1] and combination[2]:
+            return super().validate(attrs)
+        if combination[0] == transfer and combination[1] and combination[2]:
+            return super().validate(attrs)
+        raise serializers.ValidationError(
+            {"detail": "invalid (type, r_account, s_account) combination"}, code=400
+        )
+
 
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
