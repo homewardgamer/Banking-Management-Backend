@@ -51,15 +51,23 @@ class TransactionSerializer(serializers.ModelSerializer):
             attrs.get("r_account", None),
             attrs.get("s_account", None),
         )
-        if combination[0] == deposit and combination[1] and not combination[2]:
-            return super().validate(attrs)
-        if combination[0] == withdraw and not combination[1] and combination[2]:
-            return super().validate(attrs)
-        if combination[0] == transfer and combination[1] and combination[2]:
-            return super().validate(attrs)
-        raise serializers.ValidationError(
-            {"detail": "invalid (type, r_account, s_account) combination"}, code=400
-        )
+        if not (
+            (combination[0] == deposit and combination[1] and not combination[2])
+            or (combination[0] == withdraw and not combination[1] and combination[2])
+            or (combination[0] == transfer and combination[1] and combination[2])
+        ):
+            raise serializers.ValidationError(
+                {"detail": "invalid (type, r_account, s_account) combination"}, code=400
+            )
+
+        if attrs["type"] in [withdraw, transfer]:
+            s_account = attrs["s_account"]
+            if s_account.balance - attrs["amount"] < 0:
+                raise serializers.ValidationError(
+                    {"amount": "insufficient balance"}, code=400
+                )
+
+        return super().validate(attrs)
 
 
 class AccountSerializer(serializers.ModelSerializer):
