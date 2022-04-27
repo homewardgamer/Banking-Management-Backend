@@ -58,6 +58,17 @@ def transaction_add_view(request):
     return Response(data=serializer.data, status=HTTP_201_CREATED)
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsCustomer])
+def all_transactions_by_customer(request):
+    customer_id = request.user.id
+    queryset_r = Transaction.objects.filter(r_account__account_holder=customer_id)
+    queryset_s = Transaction.objects.filter(s_account__account_holder=customer_id)
+    queryset = queryset_r.union(queryset_s).order_by("-timestamp")
+    serializer = TransactionSerializer(queryset, many=True)
+    return Response(serializer.data, HTTP_200_OK)
+
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsEmployee])
 def account_add_view(request):

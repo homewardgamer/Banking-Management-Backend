@@ -59,8 +59,5 @@ class Transaction(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ["-timestamp"]
-
     def __str__(self) -> str:
         return f"{self.transaction_id} ({self.type})"
