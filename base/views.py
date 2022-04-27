@@ -84,3 +84,13 @@ def account_list_all(request):
     queryset = Account.objects.all()
     data = AccountSerializer(queryset, many=True).data
     return Response(data, HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def account_detail_by_id(request, account_id):
+    try:
+        account = Account.objects.get(account_id=account_id)
+    except Account.DoesNotExist:
+        return Response({"error": "invalid account_id"}, HTTP_400_BAD_REQUEST)
+    return Response(AccountSerializer(account).data, HTTP_200_OK)
