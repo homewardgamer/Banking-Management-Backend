@@ -46,6 +46,8 @@ class TransactionSerializer(serializers.ModelSerializer):
         deposit = Transaction.TransactionTypes.DEPOSIT
         withdraw = Transaction.TransactionTypes.WITHDRAW
         transfer = Transaction.TransactionTypes.TRANSFER
+
+        # Check correct combination of data
         combination = (
             attrs["type"],
             attrs.get("r_account", None),
@@ -60,6 +62,13 @@ class TransactionSerializer(serializers.ModelSerializer):
                 {"detail": "invalid (type, r_account, s_account) combination"}, code=400
             )
 
+        # Check is both sender and receiver accounts are enabled or disabled
+        if attrs["s_account"].disabled or attrs["r_account"].disabled:
+            raise serializers.ValidationError(
+                {"detail": "one of the account is disabled"}, code=400
+            )
+
+        # Check if sender account contains sufficient balance
         if attrs["type"] in [withdraw, transfer]:
             s_account = attrs["s_account"]
             if s_account.balance - attrs["amount"] < 0:
