@@ -11,6 +11,9 @@ class Branch(models.Model):
     class Meta:
         verbose_name_plural = "branches"
 
+    def __str__(self) -> str:
+        return f"{self.branch_code} {self.branch_name}"
+
 
 class User(AbstractUser):
     address = models.CharField(max_length=300, blank=True)
@@ -35,6 +38,9 @@ class Account(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        return f"{self.account_id} {self.account_holder.username} ({self.account_type})"
+
 
 class Transaction(models.Model):
     class TransactionTypes(models.TextChoices):
@@ -52,3 +58,6 @@ class Transaction(models.Model):
     type = models.CharField(max_length=300, choices=TransactionTypes.choices)
     amount = models.DecimalField(decimal_places=2, max_digits=10, default=0.0)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.transaction_id} ({self.type})"
