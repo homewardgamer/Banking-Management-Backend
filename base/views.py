@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -6,7 +7,6 @@ from rest_framework.status import *
 
 from base.permissions import *
 from base.serializers import *
-from django.contrib.auth import logout
 
 
 @api_view(["POST"])
@@ -76,3 +76,11 @@ def account_add_view(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data, status=HTTP_201_CREATED)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def account_list_all(request):
+    queryset = Account.objects.all()
+    data = AccountSerializer(queryset, many=True).data
+    return Response(data, HTTP_200_OK)
