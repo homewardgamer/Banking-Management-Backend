@@ -124,3 +124,11 @@ def enable_account(request, account_id):
     account.disabled = False
     account.save()
     return Response({"success": "Account enabled"}, HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def customer_list_branch(request):
+    queryset = User.objects.filter(is_customer=True, branch=request.user.branch)
+    data = UserSerializer(queryset, many=True).data
+    return Response(data, HTTP_200_OK)
