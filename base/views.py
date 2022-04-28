@@ -21,8 +21,6 @@ def user_register_view(request):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@permission_classes([AllowAny])
 def user_logout_view(request):
     request.user.auth_token.delete()
     logout(request)
@@ -116,7 +114,10 @@ def account_delete_view(request, account_id):
     except Account.DoesNotExist:
         Response({"message": "No account found with this id"}, HTTP_404_NOT_FOUND)
     if request.user.branch != account.account_holder.branch:
-        Response({"message" : "Only same branch accounts can be deleted"}, HTTP_401_UNAUTHORIZED)
+        Response(
+            {"message": "Only same branch accounts can be deleted"},
+            HTTP_401_UNAUTHORIZED,
+        )
     data = account.delete()
     Response(data, HTTP_200_OK)
 
