@@ -29,6 +29,36 @@ def user_logout_view(request):
     return Response(data={"Logout Succesful"}, status=HTTP_200_OK)
 
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def user_update_view(request, user_id):
+    body = request.data
+    if not User.objects.get(pk=user_id).exists():
+        return Response(
+            {"Error": "No user found with this user id"}, HTTP_400_BAD_REQUEST
+        )
+    user = User.objects.get(pk=user_id)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def user_view_all(request):
+    queryset = User.objects.all()
+    data = UserSerializer(queryset, many=True).data
+    Response(data, HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def user_view_by_id(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        Response({"message": "No User found with this id"}, HTTP_404_NOT_FOUND)
+
+    Response(UserSerializer(user).data, HTTP_200_OK)
+
+
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated, IsEmployee])
 def user_delete_view(request, user_id):
@@ -76,6 +106,19 @@ def account_add_view(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data, status=HTTP_201_CREATED)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def account_delete_view(request, account_id):
+    try:
+        account = Account.objects.get(pk=account_id)
+    except Account.DoesNotExist:
+        Response({"message": "No account found with this id"}, HTTP_404_NOT_FOUND)
+    if request.user.branch != account.account_holder.branch:
+        Response({"message" : "Only same branch accounts can be deleted"}, HTTP_401_UNAUTHORIZED)
+    data = account.delete()
+    Response(data, HTTP_200_OK)
 
 
 @api_view(["GET"])
