@@ -27,15 +27,17 @@ def user_logout_view(request):
     return Response(data={"Logout Succesful"}, status=HTTP_200_OK)
 
 
-@api_view(["POST"])
+@api_view(["PUT", "PATCH"])
 @permission_classes([IsAuthenticated, IsEmployee])
 def user_update_view(request, user_id):
-    body = request.data
-    if not User.objects.get(pk=user_id).exists():
-        return Response(
-            {"Error": "No user found with this user id"}, HTTP_400_BAD_REQUEST
-        )
-    user = User.objects.get(pk=user_id)
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({"error": "invalid user id"}, HTTP_404_NOT_FOUND)
+    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, HTTP_200_OK)
 
 
 @api_view(["GET"])
