@@ -140,3 +140,12 @@ def branch_list(request):
     queryset = Branch.objects.all()
     data = BranchSerializer(queryset, many=True).data
     return Response(data, HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def branch_add(request):
+    serializer = BranchSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, HTTP_201_CREATED)
