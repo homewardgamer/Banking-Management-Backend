@@ -132,3 +132,11 @@ def customer_list_branch(request):
     queryset = User.objects.filter(is_customer=True, branch=request.user.branch)
     data = UserSerializer(queryset, many=True).data
     return Response(data, HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def branch_list(request):
+    queryset = Branch.objects.all()
+    data = BranchSerializer(queryset, many=True).data
+    return Response(data, HTTP_200_OK)

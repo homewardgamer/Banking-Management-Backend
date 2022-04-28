@@ -16,4 +16,5 @@ urlpatterns = [
     path("account/disable/<account_id>", disable_account),
     path("account/enable/<account_id>", enable_account),
     path("branch/customers", customer_list_branch),
+    path("branch/all", branch_list),
 ]
