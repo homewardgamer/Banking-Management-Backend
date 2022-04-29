@@ -21,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
             "dob",
             "is_customer",
             "is_employee",
+            "branch",
         ]
 
     def validate(self, attrs):
