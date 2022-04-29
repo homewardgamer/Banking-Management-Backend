@@ -96,9 +96,17 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    pin = serializers.CharField(required=True, write_only=True)
+
     class Meta:
         model = Account
         fields = "__all__"
+
+    def validate(self, attrs):
+        pin = attrs["pin"]
+        if len(pin) != 4 and not pin.isdigit():
+            raise serializers.ValidationError({"pin": "invalid pin"})
+        return super().validate(attrs)
 
 
 class BranchSerializer(serializers.ModelSerializer):
