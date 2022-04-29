@@ -103,3 +103,21 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "address",
             "dob",
         ]
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    new_password_confirm = serializers.CharField(required=True)
+
+    model = User
+
+    def validate(self, attrs):
+        new_password = attrs["new_password"]
+        new_password_confirm = attrs["new_password_confirm"]
+        if new_password != new_password_confirm:
+            raise serializers.ValidationError(
+                {"detail": "new_password fields must match"}, code=400
+            )
+        password_validation.validate_password(new_password)
+        return attrs

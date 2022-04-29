@@ -41,19 +41,17 @@ def user_update_view(request, user_id):
     return Response(serializer.data, HTTP_200_OK)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated, IsEmployee])
-def user_update_password(request, user_id):
-    try:
-        user = User.objects.get(pk=user_id)
-    except User.DoesNotExist:
-        return Response({"error": "invalid user id"}, HTTP_404_NOT_FOUND)
-    if user.is_employee and request.user != user:
-        return Response({"error": "Password update not allowed"}, HTTP_401_UNAUTHORIZED)
-    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+@api_view(["PUT"])
+def user_password_change(request):
+    user = request.user
+    serializer = PasswordChangeSerializer(data=request.data)
+
     serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data, HTTP_200_OK)
+    if not user.check_password(serializer.data.get("old_password")):
+        return Response({"old_password": "wrong password"}, HTTP_400_BAD_REQUEST)
+    user.set_password(serializer.data.get("new_password"))
+    user.save()
+    return Response({"success": "password changed"}, HTTP_200_OK)
 
 
 @api_view(["GET"])
