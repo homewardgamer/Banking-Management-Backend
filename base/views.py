@@ -171,6 +171,14 @@ def account_list_all(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsCustomer])
+def account_list_current_user(request):
+    queryset = Account.objects.filter(account_holder=request.user)
+    data = AccountSerializer(queryset, many=True).data
+    return Response(data, HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsCustomer])
 def account_detail_by_id(request, account_id):
     try:
         account = Account.objects.get(account_id=account_id)

@@ -19,6 +19,7 @@ urlpatterns = [
     path("account/create", account_add_view),
     path("account/delete/<account_id>", account_delete_view),
     path("account/view/all", account_list_all),
+    path("account/list", account_list_current_user),
     path("account/view/<account_id>", account_detail_by_id),
     path("account/disable/<account_id>", disable_account),
     path("account/enable/<account_id>", enable_account),
