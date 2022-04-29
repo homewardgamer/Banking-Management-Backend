@@ -23,7 +23,7 @@ urlpatterns = [
     path("account/view/<account_id>", account_detail_by_id),
     path("account/disable/<account_id>", disable_account),
     path("account/enable/<account_id>", enable_account),
-    path("branch/customers", customer_list_branch),
+    path("branch/<branch_id>/customers", customer_list_branch),
     path("branch/all", branch_list),
     path("branch/add", branch_add),
 ]

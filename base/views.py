@@ -225,8 +225,8 @@ def enable_account(request, account_id):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsEmployee])
-def customer_list_branch(request):
-    queryset = User.objects.filter(is_customer=True, branch=request.user.branch)
+def customer_list_branch(request, branch_id):
+    queryset = User.objects.filter(is_customer=True, branch=branch_id)
     data = UserSerializer(queryset, many=True).data
     return Response(data, HTTP_200_OK)
 
