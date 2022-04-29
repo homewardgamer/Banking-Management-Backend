@@ -13,6 +13,7 @@ urlpatterns = [
     path("user/view/<user_id>", user_view_by_id),
     path("transaction/new", transaction_add_view),
     path("transaction/view/all", all_transactions_by_customer),
+    path("transaction/filterbydate", transaction_between_dates),
     path("account/create", account_add_view),
     path("account/delete/<account_id>", account_delete_view),
     path("account/view/all", account_list_all),

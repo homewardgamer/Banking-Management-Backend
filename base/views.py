@@ -99,6 +99,22 @@ def all_transactions_by_customer(request):
     return Response(serializer.data, HTTP_200_OK)
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated, IsCustomer])
+def transaction_between_dates(request):
+    start_date = request.GET["start"]
+    end_date = request.GET["end"]
+    customer_id = request.user.id
+    queryset_r = Transaction.objects.filter(r_account__account_holder=customer_id)
+    queryset_s = Transaction.objects.filter(s_account__account_holder=customer_id)
+    queryset_range = Transaction.objects.filter(
+        timestamp__date__range=(start_date, end_date)
+    )
+    queryset = queryset_range.intersection(queryset_r.union(queryset_s))
+    data = TransactionSerializer(queryset, many=True).data
+    return Response(data, HTTP_200_OK)
+
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated, IsEmployee])
 def account_add_view(request):
