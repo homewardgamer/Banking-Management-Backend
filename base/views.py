@@ -59,7 +59,7 @@ def user_password_change(request):
 def user_view_all(request):
     queryset = User.objects.all()
     data = UserSerializer(queryset, many=True).data
-    Response(data, HTTP_200_OK)
+    return Response(data, HTTP_200_OK)
 
 
 @api_view(["GET"])
