@@ -189,7 +189,7 @@ def account_detail_by_id(request, account_id):
     return Response(AccountSerializer(account).data, HTTP_200_OK)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated, IsCustomer])
 def disable_account(request, account_id):
     try:
@@ -198,12 +198,14 @@ def disable_account(request, account_id):
         return Response({"error": "invalid account_id"}, HTTP_400_BAD_REQUEST)
     if request.user != account.account_holder:
         return Response({"error": "permission denied"}, HTTP_401_UNAUTHORIZED)
+    if account.pin != request.data.get("pin"):
+        return Response({"error": "incorrect pin"}, HTTP_400_BAD_REQUEST)
     account.disabled = True
     account.save()
     return Response({"success": "Account disabled"}, HTTP_200_OK)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated, IsCustomer])
 def enable_account(request, account_id):
     try:
@@ -212,6 +214,8 @@ def enable_account(request, account_id):
         return Response({"error": "invalid account_id"}, HTTP_400_BAD_REQUEST)
     if request.user != account.account_holder:
         return Response({"error": "permission denied"}, HTTP_401_UNAUTHORIZED)
+    if account.pin != request.data.get("pin"):
+        return Response({"error": "incorrect pin"}, HTTP_400_BAD_REQUEST)
     account.disabled = False
     account.save()
     return Response({"success": "Account enabled"}, HTTP_200_OK)
