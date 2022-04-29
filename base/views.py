@@ -40,6 +40,19 @@ def user_update_view(request, user_id):
     return Response(serializer.data, HTTP_200_OK)
 
 
+@api_view(["PUT"])
+def user_password_change(request):
+    user = request.user
+    serializer = PasswordChangeSerializer(data=request.data)
+
+    serializer.is_valid(raise_exception=True)
+    if not user.check_password(serializer.data.get("old_password")):
+        return Response({"old_password": "wrong password"}, HTTP_400_BAD_REQUEST)
+    user.set_password(serializer.data.get("new_password"))
+    user.save()
+    return Response({"success": "password changed"}, HTTP_200_OK)
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsEmployee])
 def user_view_all(request):

@@ -9,6 +9,7 @@ urlpatterns = [
     path("user/login", obtain_auth_token),
     path("user/logout", user_logout_view),
     path("user/update/<user_id>", user_update_view),
+    path("user/changepassword", user_password_change),
     path("user/view/all", user_view_all),
     path("user/view/<user_id>", user_view_by_id),
     path("transaction/new", transaction_add_view),
