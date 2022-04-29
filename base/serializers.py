@@ -24,6 +24,12 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
+        if (
+            self.context["request"].user.is_authenticated
+            and self.context["request"].user.is_employee
+        ):
+            attrs["is_employee"] = True
+            attrs["is_customer"] = False
         if attrs.get("is_employee", False) and attrs.get("is_customer", False):
             raise serializers.ValidationError(
                 {"message": "choose only one role"}, code=400

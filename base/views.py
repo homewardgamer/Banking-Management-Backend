@@ -13,9 +13,11 @@ from base.serializers import *
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def user_register_view(request):
-    serializer = UserSerializer(data=request.data)
+    serializer = UserSerializer(data=request.data, context={"request": request})
     serializer.is_valid(raise_exception=True)
     serializer.save()
+    if request.user.is_authenticated and request.user.is_employee:
+        return Response(serializer.data, HTTP_201_CREATED)
     data = dict(serializer.data)
     data["token"] = Token.objects.get(user=data["id"]).key
     return Response(data=data, status=HTTP_201_CREATED)
