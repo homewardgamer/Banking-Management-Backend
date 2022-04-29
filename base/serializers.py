@@ -38,6 +38,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    pin = serializers.CharField(required=True, write_only=True)
+
     class Meta:
         model = Transaction
         fields = "__all__"
@@ -62,6 +64,18 @@ class TransactionSerializer(serializers.ModelSerializer):
                 {"detail": "invalid (type, r_account, s_account) combination"}, code=400
             )
 
+        # Check pin
+        if attrs["type"] in [transfer, withdraw]:
+            actual_pin = attrs["s_account"].pin
+            provided_pin = attrs["pin"]
+            if provided_pin != actual_pin:
+                raise serializers.ValidationError({"failed": "incorrect pin"}, code=400)
+        if attrs["type"] == deposit:
+            actual_pin = attrs["r_account"].pin
+            provided_pin = attrs["pin"]
+            if provided_pin != actual_pin:
+                raise serializers.ValidationError({"failed": "incorrect pin"}, code=400)
+
         # Check is both sender and receiver accounts are enabled or disabled
         if attrs["s_account"].disabled or attrs["r_account"].disabled:
             raise serializers.ValidationError(
@@ -75,6 +89,8 @@ class TransactionSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {"amount": "insufficient balance"}, code=400
                 )
+
+        del attrs["pin"]
 
         return super().validate(attrs)
 

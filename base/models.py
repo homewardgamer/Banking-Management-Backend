@@ -38,6 +38,7 @@ class Account(models.Model):
     disabled = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    pin = models.CharField(max_length=4, default="")
 
     def __str__(self) -> str:
         return f"{self.account_id} {self.account_holder.username} ({self.account_type})"
