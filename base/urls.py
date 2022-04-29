@@ -11,6 +11,7 @@ urlpatterns = [
     path("user/update/<user_id>", user_update_view),
     path("user/view/all", user_view_all),
     path("user/view/<user_id>", user_view_by_id),
+    path("user/changepassword<user_id>", user_update_password),
     path("transaction/new", transaction_add_view),
     path("transaction/view/all", all_transactions_by_customer),
     path("transaction/filterbydate", transaction_between_dates),

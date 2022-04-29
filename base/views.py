@@ -1,3 +1,4 @@
+from re import L
 from django.contrib.auth import logout
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
@@ -34,6 +35,21 @@ def user_update_view(request, user_id):
         user = User.objects.get(pk=user_id)
     except User.DoesNotExist:
         return Response({"error": "invalid user id"}, HTTP_404_NOT_FOUND)
+    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated, IsEmployee])
+def user_update_password(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({"error": "invalid user id"}, HTTP_404_NOT_FOUND)
+    if user.is_employee and request.user != user:
+        return Response({"error": "Password update not allowed"}, HTTP_401_UNAUTHORIZED)
     serializer = UserUpdateSerializer(user, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     serializer.save()
