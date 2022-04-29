@@ -63,6 +63,13 @@ def user_view_all(request):
 
 
 @api_view(["GET"])
+def user_view_self(request):
+    user = User.objects.get(id=request.user.id)
+    data = UserSerializer(user).data
+    return Response(data, HTTP_200_OK)
+
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated, IsEmployee])
 def user_view_by_id(request, user_id):
     try:
