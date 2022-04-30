@@ -83,11 +83,22 @@ class TransactionSerializer(serializers.ModelSerializer):
             if provided_pin != actual_pin:
                 raise serializers.ValidationError({"failed": "incorrect pin"}, code=400)
 
-        # Check is both sender and receiver accounts are enabled or disabled
-        if attrs["s_account"].disabled or attrs["r_account"].disabled:
-            raise serializers.ValidationError(
-                {"detail": "one of the account is disabled"}, code=400
-            )
+        # Check for account state (enabled/disabled)
+        if attrs["type"] == transfer:
+            if attrs["s_account"].disabled or attrs["r_account"].disabled:
+                raise serializers.ValidationError(
+                    {"detail": "one of the account is disabled"}, code=400
+                )
+        if attrs["type"] == deposit:
+            if attrs["r_account"].disabled:
+                raise serializers.ValidationError(
+                    {"detail": "account is disabled"}, code=400
+                )
+        if attrs["type"] == withdraw:
+            if attrs["s_account"].disabled:
+                raise serializers.ValidationError(
+                    {"detail": "account is disabled"}, code=400
+                )
 
         # Check if sender account contains sufficient balance
         if attrs["type"] in [withdraw, transfer]:
