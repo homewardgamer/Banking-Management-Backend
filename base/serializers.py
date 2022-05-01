@@ -144,6 +144,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             "last_name",
             "address",
             "dob",
+            "branch",
         ]
 
 
