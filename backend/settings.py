@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-z5gzd(g=apad4p0xjkq4rv35ows2+t_c((524by)6=q6f7n21&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["bankmgmtapi.herokuapp.com"]
 
 
 # Application definition
